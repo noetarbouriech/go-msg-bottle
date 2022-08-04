@@ -22,6 +22,7 @@ func AdminRoutes(r chi.Router) {
 	r.Use(jwtauth.Verifier(tokenAuth))
 	r.Use(jwtauth.Authenticator)
 
+  r.Get("/users", ListUsers)
 	r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
 		_, claims, _ := jwtauth.FromContext(r.Context())
 		w.Write([]byte(fmt.Sprintf("hello %v", claims["name"])))

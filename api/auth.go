@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 var tokenAuth *jwtauth.JWTAuth
 
 var users = map[string]string{
+// username : password
   "user1": "password1",
   "user2": "password2",
 }
@@ -31,13 +33,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
   // decode json
   err := json.NewDecoder(r.Body).Decode(&credentials)
   if err != nil {
+    w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Input error"))
     return
   }
 
-  // check username/password
+  // check username and password
   expectedPassword, ok := users[credentials.Username]
   if !ok || expectedPassword != credentials.Password {
+    w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("Wrong password or username"))
     return
   }
@@ -50,6 +54,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		"exp": expireTime.Unix(),     // expire time
 	})
 	if err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Error with token creation"))
 		return
 	}
@@ -64,7 +69,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		RawExpires: "",
 		MaxAge:     0,
 		Secure:     false,
-		HttpOnly:   false,
+		HttpOnly:   true,
 		SameSite:   0,
 		Raw:        "",
 		Unparsed:   []string{},
@@ -74,8 +79,36 @@ func Login(w http.ResponseWriter, r *http.Request) {
   fmt.Println(time.Now().UTC().String() + " - " + credentials.Username + " connected")
 }
 
-// TODO
 func SignUp(w http.ResponseWriter, r *http.Request) {
-  // Add credentials to db
-  // Login
+  var credentials Credentials
+
+  // decode json
+  err := json.NewDecoder(r.Body).Decode(&credentials)
+  if err != nil {
+    w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Input error"))
+    return
+  }
+
+  // check if user already exists
+  _, exists := users[credentials.Username]
+  if (exists) {
+    w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("User already exists"))
+    return
+  }
+
+  // add user to map
+  users[credentials.Username] = credentials.Password
+
+  w.Write([]byte("Account created"))
+  fmt.Println(time.Now().UTC().String() + " - User " + credentials.Username + " has been created")
+}
+
+func ListUsers(w http.ResponseWriter, r *http.Request) {
+  b := new(bytes.Buffer)
+  for user, password := range users {
+      fmt.Fprintf(b, "%s = \"%s\"\n", user, password)
+  }
+  w.Write(b.Bytes())
 }

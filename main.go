@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/render"
 )
 
 func main() {
@@ -15,9 +16,10 @@ func main() {
 	r := chi.NewRouter()
 
 	// middlewares
-	r.Use(middleware.Heartbeat("/ping"))
 	r.Use(middleware.Logger)
 	r.Use(middleware.CleanPath)
+  r.Use(middleware.AllowContentType("application/json"))
+  r.Use(render.SetContentType(render.ContentTypeJSON))
 
 	// routes
 	r.Group(api.PublicRoutes)
