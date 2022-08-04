@@ -1,23 +1,27 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/noetarbouriech/go-msg-bottle/api"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-  r := chi.NewRouter()
+	fmt.Println("Starting server")
+	r := chi.NewRouter()
 
-  r.Use(middleware.Heartbeat("/ping"))
-  r.Use(middleware.Logger)
-  r.Use(middleware.CleanPath)
+	// middlewares
+	r.Use(middleware.Heartbeat("/ping"))
+	r.Use(middleware.Logger)
+	r.Use(middleware.CleanPath)
 
-  r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-      w.Write([]byte("root"))
-  })
+	// routes
+	r.Group(api.PublicRoutes)
+	r.Group(api.AdminRoutes)
 
-  http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":3000", r)
 }
-
