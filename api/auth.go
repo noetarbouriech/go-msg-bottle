@@ -68,9 +68,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Expires:    expireTime,
 		RawExpires: "",
 		MaxAge:     0,
-		Secure:     false,
+		Secure:     true,
 		HttpOnly:   true,
-		SameSite:   0,
+    SameSite:   http.SameSiteStrictMode,
 		Raw:        "",
 		Unparsed:   []string{},
 	})
@@ -95,6 +95,20 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
   if (exists) {
     w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("User already exists"))
+    return
+  }
+
+  // check if username is too short
+  if (len(credentials.Username) <= 3 || len(credentials.Username) >= 20) {
+    w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Username too short or too long"))
+    return
+  }
+
+  // check if password is too short
+  if (len(credentials.Password) <= 6 || len(credentials.Password) >= 40) {
+    w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Password not complex enough"))
     return
   }
 
