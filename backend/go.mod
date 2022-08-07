@@ -11,6 +11,7 @@ require github.com/ajg/form v1.5.1 // indirect
 
 require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.0-20210816181553-5444fa50b93d // indirect
+	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/render v1.0.2
 	github.com/goccy/go-json v0.7.6 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
