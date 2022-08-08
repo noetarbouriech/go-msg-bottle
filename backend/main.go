@@ -19,21 +19,21 @@ func main() {
 	// middlewares
 	r.Use(middleware.Logger)
 	r.Use(middleware.CleanPath)
-  r.Use(middleware.AllowContentType("application/json"))
-  r.Use(render.SetContentType(render.ContentTypeJSON))
-  r.Use(cors.Handler(cors.Options{
-  	AllowedOrigins: []string{"https://*", "http://*"},
-  	AllowOriginFunc: func(r *http.Request, origin string) bool {
-  		return true
-  	},
-  	AllowedMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-  	AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-  	ExposedHeaders:     []string{"Set-Cookie"},
-  	AllowCredentials:   true,
-  	MaxAge:             300,
-  	OptionsPassthrough: false,
-  	Debug:              false,
-  }))
+	r.Use(middleware.AllowContentType("application/json"))
+	r.Use(render.SetContentType(render.ContentTypeJSON))
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowOriginFunc: func(r *http.Request, origin string) bool {
+			return true
+		},
+		AllowedMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:     []string{"Set-Cookie"},
+		AllowCredentials:   true,
+		MaxAge:             300,
+		OptionsPassthrough: false,
+		Debug:              false,
+	}))
 
 	// routes
 	r.Group(api.PublicRoutes)
