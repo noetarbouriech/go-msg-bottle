@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/noetarbouriech/go-msg-bottle/api"
 
@@ -10,9 +11,17 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// environment variables
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+
+	// router
 	fmt.Println("Starting server")
 	r := chi.NewRouter()
 
@@ -39,5 +48,5 @@ func main() {
 	r.Group(api.PublicRoutes)
 	r.Group(api.AdminRoutes)
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":"+os.Getenv("API_PORT"), r)
 }

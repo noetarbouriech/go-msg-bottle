@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-chi/jwtauth/v5"
@@ -64,7 +65,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Name:       "jwt",
 		Value:      tokenString,
 		Path:       "",
-		Domain:     "127.0.0.1",
+		Domain:     os.Getenv("FRONTEND_DOMAIN"),
 		Expires:    expireTime,
 		RawExpires: "",
 		MaxAge:     10000,

@@ -45,7 +45,8 @@
   let email = ''; let password = '';
 
   function login() {
-    postData("http://127.0.0.1:3000/login", {
+    let base_url = import.meta.env.VITE_API_URL;
+    postData("http://" + base_url + "/login", {
       "username": email,
       "password": password
     })
