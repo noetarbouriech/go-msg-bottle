@@ -10,7 +10,9 @@
   },
   "devDependencies": {
     "@smui/common": "^6.0.0",
+    "@smui/icon-button": "^6.1.0",
     "@smui/paper": "^6.0.0",
+    "@smui/snackbar": "^6.1.0",
     "@smui/textfield": "^6.0.0",
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "svelte": "^3.49.0",

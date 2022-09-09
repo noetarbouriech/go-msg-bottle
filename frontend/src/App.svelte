@@ -1,5 +1,5 @@
 <main>
-  <h1>Test</h1>
+  <h1>APP TITLE</h1>
   <Router {routes} on:conditionsFailed={goToLogin}/>
 </main>
 

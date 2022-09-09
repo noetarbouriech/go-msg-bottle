@@ -15,8 +15,8 @@ var tokenAuth *jwtauth.JWTAuth
 
 var users = map[string]string{
 	// username : password
-	"user1": "password1",
-	"user2": "password2",
+	"user1@test.com": "password1",
+	"user2@test.com": "password2",
 }
 
 type Credentials struct {

@@ -1,7 +1,12 @@
 <Paper>
   <Title>LOGIN</Title>
   <Content>
-    <Textfield bind:value={email} type="email">
+    <Textfield 
+      bind:value={email}
+      type="email"
+      bind:invalid={invalid_email}
+      updateInvalid
+    >
       <svelte:fragment slot="label">
         <CommonIcon
           class="material-icons"
@@ -14,7 +19,13 @@
       </svelte:fragment>
     </Textfield>
 
-    <Textfield bind:value={password} type="password" input$maxlength={40}>
+    <Textfield
+      bind:value={password}
+      type="password"
+      input$maxlength={40}
+      bind:invalid={invalid_password}
+      updateInvalid
+    >
       <svelte:fragment slot="label">
         <CommonIcon
           class="material-icons"
@@ -27,14 +38,32 @@
       </svelte:fragment>
     </Textfield>
 
-    <Button on:click={login} variant="raised">
+    <Button 
+      on:click={login}
+      variant="raised"
+      disabled={
+        invalid_email 
+        || invalid_password 
+        || email === '' 
+        || password === ''
+      }
+    >
       <Label>LOGIN</Label>
     </Button>
+
+    <Snackbar bind:this={snackbarError} class="password-error">
+      <Label>Wrong password and/or wrong username.</Label>
+      <Actions>
+        <IconButton class="material-icons" title="Dismiss">close</IconButton>
+      </Actions>
+    </Snackbar>
   </Content>
 </Paper>
 
 <script>
   import postData from '../lib/api.js'
+  import {push} from 'svelte-spa-router'
+
   import Paper, { Title, Subtitle, Content } from '@smui/paper';
   import { Icon as CommonIcon } from '@smui/common';
 
@@ -42,6 +71,12 @@
   import HelperText from '@smui/textfield/helper-text';
   import Button, { Label } from '@smui/button';
 
+  import SnackbarComponentDev from '@smui/snackbar';
+  import Snackbar, { Actions } from '@smui/snackbar';
+  import IconButton from '@smui/icon-button';
+
+  let invalid_email = true; let invalid_password = true;
+  let snackbarError;
   let email = ''; let password = '';
 
   function login() {
@@ -50,8 +85,14 @@
       "username": email,
       "password": password
     })
-    .then((data) => {
-      console.log(data);
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("connection successful");
+        push("/app");
+      } else {
+        console.log("connection failed");
+        snackbarError && snackbarError.open();
+      }
     });
   }
 
