@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  mongo:
+    image: "mongo:latest"
+  api:
+    build: "./backend"
+    ports: 
+      - "3000:3000"
+    environment:
+      API_PORT: 3000
+      FRONTEND_DOMAIN: "127.0.0.1:8080"
+  web:
+    build: 
+      context: "./frontend"
+      args:
+        API_URL: "127.0.0.1:3000"
+    ports: 
+      - "8080:80"
+    depends_on:
+      - "api"
